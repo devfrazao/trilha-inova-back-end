@@ -103,6 +103,7 @@ while(numeroDigitado !=5){
     }
 }
 
+
 // QUESTÃO 11
 //Crie um loop que imprima a tabuada do número 7, de 1 a 10.
 
@@ -126,3 +127,75 @@ for(let i = 0; i <= 20; i++){
     }
 }
 alert(numerosPares);
+
+
+// QUESTÃO 13
+// Escreva um código que calcule a área de um círculo. Utilize uma função para realizar o cálculo.
+// A função deve receber o raio como parâmetro e retornar a área.
+
+function calculaAreaCirculo(raio){
+    let area = parseFloat(Math.PI * Math.pow(raio,2)).toFixed(2);
+    return area;
+}
+
+var raioDigitado = parseFloat(prompt("Digite o valor do raio")).toFixed(2);
+
+while(isNaN(raioDigitado)){
+    raioDigitado = parseFloat(prompt("Campo não pode ser vazio. Digite o valor do raio")).toFixed(2);
+}
+
+var areaCirculo = calculaAreaCirculo(raioDigitado);
+alert("A área do círculo é: " + areaCirculo);
+
+
+// QUESTÃO 14 Comente seu código explicando o que cada parte faz. Crie um programa simples que calcule a soma de 
+// dois números e imprima o resultado.
+
+// Declaração de variáves
+var num1, num2, soma;
+
+// converte, em inteiro, o valor fornecido pelo usuário e atribui a variável
+var num1 = parseInt(prompt("Digite número 1"));
+
+// Laço para impedir que usuário deixe campo em branco
+while(isNaN(num1)){num1 = parseInt(prompt("Campo não pode ser vazio. Digite número 1"));}
+
+// converte, em inteiro, o valor fornecido pelo usuário e atribui a variável
+var num2 = parseInt(prompt("Digite número 2"));
+
+// Laço para impedir que usuário deixe campo em branco
+while(isNaN(num2)){num2 = parseInt(prompt("Campo não pode ser vazio. Digite número 2"));}
+
+// soma dos numeros
+soma = somaNumeros(num1, num2);
+
+// Exibe o valor da operação
+alert(`A soma dos números é ${soma}`);
+
+// função para realizar a soma de dois numeros
+function somaNumeros(x,y){
+    return x + y;
+}
+
+
+// QUESTÃO 15
+// 15. Refatore o código abaixo para que seja mais legível, usando boas práticas de nomenclatura e separando o código em funções:
+//
+//        x = 10
+//
+//        y = 20
+//
+//        z = x+y
+//
+//        console.log(z)
+
+let numeroUm = 10;
+let numeroDois = 20;
+let numeroTres = somaDoisNumeros(numeroUm, numeroDois);
+
+console.log(numeroTres);
+alert(numeroTres);
+
+function somaDoisNumeros(numerox, numeroy){
+    return numerox + numeroy;
+}
