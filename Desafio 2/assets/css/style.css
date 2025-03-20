@@ -42,10 +42,25 @@ body {
     background-color: var(--surface-primary);
 }
 
+/* Ocultar campo de upload*/
+input[type="file"] {
+    display: none;
+}
+
+fieldset {
+    border: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 140%;
+    letter-spacing: 0%;
+}
+
 .conteudo {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-top: 10%;
     padding: 5%;
     max-width: 1280px;
     width: 100%;
@@ -96,7 +111,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Formulário de informações */
+/* Formulário de informações e endereço*/
 .conteudo_movel_informacoes,
 .conteudo_movel_endereco,
 .conteudo_movel_trilhas {
@@ -149,84 +164,130 @@ body {
     outline: none;
 }
 
-/* Campo de upload de arquivo */
-.documento_identidade .enviar_documento,
-.formulario_endereco_comprovante div {
+/* Estilo para o campo de upload */
+.enviar_documento {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    height: 160px;
+    padding: 12px;
+    border: 2px dashed var(--stroke-default);
+    border-radius: 8px;
+}
+
+.enviar_documento label {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    padding: 24px;
-    border: 2px dashed var(--stroke-default);
-    border-radius: 8px;
+    height: 160px;
+    width: 528px;
     cursor: pointer;
+
 }
 
-.documento_identidade .enviar_documento:hover,
-.formulario_endereco_comprovante div:hover {
+.enviar_documento:hover {
     border-color: var(--brand-mid);
     background-color: var(--surface-secondary);
 }
 
-/* Formulário de endereço */
+.enviar_documento img {
+    width: 48px;
+    height: 48px;
+}
+
+
+/* Formulário endereço */
 .form_box_double {
     display: flex;
-    gap: 20px;
-}
-
-.form_box_sub {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-/* Trilhas de aprendizagem */
-.conteudo_movel_trilhas fieldset {
-    border: none;
-    padding: 0;
-}
-
-.conteudo_movel_trilhas legend {
-    font-size: 14px;
-    color: var(--text-secondary);
-    margin-bottom: 16px;
-}
-
-.conteudo_movel_trilhas div {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
     gap: 16px;
 }
 
-.conteudo_movel_trilhas label {
+
+.formulario_endereco_rua,
+.formulario_endereco_cidade {
     display: flex;
+    flex-direction: column;
+    width: 70%;
+    max-width: 100%;
+    max-height: 100%;
+    gap: 4px;
+}
+
+.formulario_endereco_numero,
+.formulario_endereco_estado {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    max-width: 30%;
+    height: 72px;
+    gap: 4px;
+}
+
+/* Estilo para as trilhas */
+.trilhas_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.trilha {
+    width: 240px;
+    height: 120px;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     gap: 8px;
+    border: 1px solid var(--stroke-default);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.rotulo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 240px;
+    height: 120px;
+    padding: 10px;
     font-size: 14px;
     color: var(--text-primary);
+    text-align: left;
     cursor: pointer;
 }
 
-.conteudo_movel_trilhas input[type="radio"] {
+.trilha input[type="radio"] {
     margin: 0;
+    align-self: flex-start;
+}
+
+.trilha:hover {
+    background-color: var(--surface-secondary);
 }
 
 /* Checkbox de termos */
 .conteudo_movel_checkbox {
     display: flex;
-    align-items: center;
+    align-items: first baseline;
     gap: 8px;
-}
-
-.conteudo_movel_checkbox input {
-    margin: 0;
 }
 
 .conteudo_movel_checkbox label {
     font-size: 14px;
     color: var(--text-secondary);
+}
+
+.conteudo_movel_checkbox a {
+    text-decoration: none;
 }
 
 .conteudo_movel_checkbox span {
@@ -243,15 +304,16 @@ body {
 
 .conteudo_movel_acao button {
     padding: 12px 24px;
-    border: none;
+    border: 1px solid var(--stroke-highlight);
     border-radius: 8px;
     font-size: 14px;
+    color: var(--text-highlight);
+    background-color: var(--surface-primary);
     cursor: pointer;
 }
 
-.conteudo_movel_acao button:first-child {
+.conteudo_movel_acao button:first-child:hover {
     background-color: var(--surface-disabled);
-    color: var(--text-secondary);
 }
 
 .conteudo_movel_acao button:last-child {
@@ -284,14 +346,17 @@ body {
 /* Responsividade */
 @media (max-width: 768px) {
     .conteudo {
-        flex-direction: column;
+        margin: auto;
         padding: 16px;
+        flex-direction: column;
     }
 
     .conteudo_movel,
     .conteudo_fixo {
         width: 100%;
         max-width: 100%;
+        max-height: 100%;
+        overflow-y: none;
     }
 
     .conteudo_fixo {

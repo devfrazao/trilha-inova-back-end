@@ -36,7 +36,7 @@
                     </div>
                     <div class="cpf formulario_informacoes_campo">
                         <label for="cpf">CPF</label>
-                        <input type="text" id="cpf" name="cpf" placeholder="123.456.789-00" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" required>
+                        <input type="text" id="cpf" name="cpf" placeholder="123.456.789-00">
                     </div>
                     <div class="sexo formulario_informacoes_campo">
                         <label for="sexo">Sexo</label>
@@ -48,18 +48,21 @@
                     </div>
                     <div class="email formulario_informacoes_campo">
                         <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" placeholder="email@servidor.com" required>
+                        <input type="email" id="email" name="email" placeholder="email@servidor.com">
                     </div>
                     <div class="telefone formulario_informacoes_campo">
                         <label for="telefone">Telefone</label>
-                        <input type="text" id="telefone" name="telefone" placeholder="(98)9 9999-9999" pattern="\(\d{2}\)\d{5}-\d{4}" required>
+                        <input type="text" id="telefone" name="telefone" placeholder="(98)9 9999-9999">
                     </div>
                     <div class="documento_identidade formulario_informacoes_campo">
-                        <label for="documento_identidade">Documento de identidade</label>
+                        <label>Documento de identidade</label>
                         <div class="enviar_documento">
-                            <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
-                            <input type="file" id="documento_identidade" name="documento_identidade" accept="image/*, application/pdf" required>
-                            <span>Clique aqui para selecionar arquivos</span>
+                            <label for="documento_identidade">
+                                <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
+                                <input type="file" id="documento_identidade" name="documento_identidade"
+                                    accept="image/*, application/pdf" required>
+                                Clique aqui para selecionar arquivos
+                            </label>
                         </div>
                     </div>
                 </form>
@@ -71,33 +74,37 @@
                 <form class="formulario_endereco">
                     <div class="form_box formulario_endereco_cep">
                         <label for="cep">CEP</label>
-                        <input type="text" id="cep" name="cep" placeholder="65000-000" pattern="\d{5}-\d{3}" required>
+                        <input type="text" id="cep" name="cep" placeholder="01234-567" required>
                     </div>
                     <div class="form_box form_box_double">
-                        <div class="form_box_sub formulario_endereco_rua">
+                        <div class="form_box_sub_left formulario_endereco_rua">
                             <label for="rua">Rua</label>
-                            <input type="text" id="rua" name="rua" placeholder="Nome da rua" required>
+                            <input type="text" id="rua" name="rua" placeholder="Rua 1" required>
                         </div>
-                        <div class="form_box_sub formulario_endereco_numero">
+                        <div class="form_box_sub_rigth formulario_endereco_numero">
                             <label for="numero">Número</label>
-                            <input type="text" id="numero" name="numero" placeholder="" required>
+                            <input type="text" id="numero" name="numero" placeholder="10" required>
                         </div>
                     </div>
                     <div class="form_box form_box_double">
-                        <div class="form_box_sub formulario_endereco_cidade">
+                        <div class="form_box_sub_left formulario_endereco_cidade">
                             <label for="cidade">Cidade</label>
-                            <input type="text" id="cidade" name="cidade" placeholder="" required>
+                            <input type="text" id="cidade" name="cidade" placeholder="São Luís" required>
                         </div>
-                        <div class="form_box_sub formulario_endereco_estado">
+                        <div class="form_box_sub_rigth formulario_endereco_estado">
                             <label for="estado">Estado</label>
-                            <input type="text" id="estado" name="estado" placeholder="" required>
+                            <input type="text" id="estado" name="estado" placeholder="MA" required>
                         </div>
                     </div>
                     <div class="form_box formulario_endereco_comprovante">
                         <label for="comprovante">Comprovante de Residência</label>
-                        <div>
-                            <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
-                            <input type="file" id="comprovante" name="comprovante" accept="image/*, application/pdf" required>
+                        <div class="enviar_documento">
+                            <label for="comprovante">
+                                <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
+                                <input type="file" id="comprovante" name="comprovante" accept="image/*, application/pdf"
+                                    required>
+                                Clique aqui para selecionar o arquivo
+                            </label>
                         </div>
                     </div>
                 </form>
@@ -106,58 +113,63 @@
             <!-- Trilhas de aprendizagem -->
             <div class="conteudo_movel_trilhas">
                 <h4>Trilhas de aprendizagem</h4>
-                <fieldset>
-                    <legend>Selecione apenas uma trilha</legend>
-                    <div>
-                        <div id="front-end">
-                            <div>
-                                <img src="./assets/images/front-end.png" alt="Ícone de Front-end">
+                <form>
+                    <fieldset>
+                        <legend>Selecione apenas uma trilha</legend>
+                        <div class="trilhas_container">
+                            <div class="trilha">
+                                <label for="front__end" class="rotulo">
+                                    <input type="radio" id="front__end" name="trilha" value="front-end" required>
+                                    <img src="./assets/images/front-end.png" alt="Ícone de Front-end">
+                                    Programação Front-end
+                                </label>
                             </div>
-                            <label for="front__end">Programação Front-end</label>
-                            <input type="radio" id="front__end" name="trilha" value="front-end" required>
-                        </div>
-                        <div id="back-end">
-                            <div>
-                                <img src="./assets/images/back-end.png" alt="Ícone de Back-end">
+                            <div class="trilha">
+                                <label for="back__end" class="rotulo">
+                                    <input type="radio" id="back__end" name="trilha" value="back-end" required>
+                                    <img src="./assets/images/back-end.png" alt="Ícone de Back-end">
+                                    Programação Back-end
+                                </label>
                             </div>
-                            <label for="back__end">Programação Back-end</label>
-                            <input type="radio" id="back__end" name="trilha" value="back-end" required>
-                        </div>
-                        <div id="games">
-                            <div>
-                                <img src="./assets/images/jogos.png" alt="Ícone de Jogos">
+                            <div class="trilha">
+                                <label for="games" class="rotulo">
+                                    <input type="radio" id="games" name="trilha" value="games" required>
+                                    <img src="./assets/images/jogos.png" alt="Ícone de Jogos">
+                                    Programação de Jogos
+                                </label>
                             </div>
-                            <label for="games">Programação de Jogos</label>
-                            <input type="radio" id="games" name="trilha" value="games" required>
-                        </div>
-                        <div id="ux-design">
-                            <div>
-                                <img src="./assets/images/ux.png" alt="Ícone de UX">
+                            <div class="trilha">
+                                <label for="ux" class="rotulo">
+                                    <input type="radio" id="ux" name="trilha" value="ux" required>
+                                    <img src="./assets/images/ux.png" alt="Ícone de UX">
+                                    Design e Experiência
+                                </label>
                             </div>
-                            <label for="ux">Design e Experiência</label>
-                            <input type="radio" id="ux" name="trilha" value="ux" required>
-                        </div>
-                        <div id="data-science">
-                            <div>
-                                <img src="./assets/images/Frame 48095973.png" alt="Ícone de Ciência de Dados">
+                            <div class="trilha">
+                                <label for="data" class="rotulo">
+                                    <input type="radio" id="data" name="trilha" value="data" required>
+                                    <img src="./assets/images/Frame.png" alt="Ícone de Ciência de Dados">
+                                    Ciência de Dados
+                                </label>
                             </div>
-                            <label for="data">Ciência de Dados</label>
-                            <input type="radio" id="data" name="trilha" value="data" required>
                         </div>
-                    </div>
-                </fieldset>
+                    </fieldset>
+                </form>
             </div>
-
             <!-- Checkbox de termos -->
             <div class="conteudo_movel_checkbox">
                 <input type="checkbox" id="termos" required>
-                <label for="termos">Declaro que li e concordo com os <span>Termos e Condições</span> e com a <span>Política de Privacidade</span>.</label>
+                <label for="termos">Declaro que li e concordo com os <a href="/" target="_blank"><span>Termos e
+                            Condições</span></a> e com a
+                    <a href="/" target="_blank"><span>Política de Privacidade</span></a>.</label>
             </div>
 
             <!-- Botões de ação -->
             <div class="conteudo_movel_acao">
-                <button type="button">Cancelar</button>
-                <button type="submit">Fazer Inscrição</button>
+                <form>
+                    <button type="button">Cancelar</button>
+                    <button type="submit">Fazer Inscrição</button>
+                </form>
             </div>
         </section>
 
