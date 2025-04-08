@@ -40,7 +40,7 @@ O Trilhas Inova é uma plataforma completa para inscrição e acompanhamento em 
 
 2. Clone o repositório:
 ```bash
-git clone https://github.com/seu-usuario/trilhas-inova.git
+git clone https://github.com/seu-usuario/trilhas-inova-back-end.git
 ```
 
 3. Executar o projeto
