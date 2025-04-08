@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <title>Formulário de Inscrição</title>
+</head>
+
+<body>
+    <!-- Tela de Login (inicialmente oculta) -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <img src="./assets/images/logo-trilhas-inova.png" alt="Logo Trilhas Inova" class="login-logo">
+            <h2>Login</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginId">Usuário</label>
+                    <input type="text" id="loginId" required aria-describedby="loginIdError">
+                    <span class="error-message" id="loginIdError"></span>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <input type="password" id="loginPassword" required aria-describedby="loginPasswordError">
+                    <span class="error-message" id="loginPasswordError"></span>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="login-btn">Entrar</button>
+                    <button type="button" id="registerBtn" class="register-btn">Cadastrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Formulário Principal (inicialmente oculto) -->
+    <main class="conteudo" id="mainForm" style="display: none;">
+        <section class="conteudo_movel">
+            <!-- Cabeçalho do formulário -->
+            <div class="conteudo_movel_cabecalho">
+                <a href="#" id="logoutBtn" aria-label="Sair do sistema">
+                    <img src="./assets/images/arrow-left-02.png" alt="Ícone de voltar">
+                    Voltar
+                </a>
+                <h2>Formulário de Inscrição</h2>
+                <p>Preencha os dados abaixo para fazer sua inscrição no Programa Trilhas.</p>
+            </div>
+
+            <!-- Informações do participante -->
+            <div class="conteudo_movel_informacoes">
+                <h4>Informações do participante</h4>
+                <form class="formulario_informacoes" id="formularioInformacoes">
+                    <div class="nome_completo formulario_informacoes_campo">
+                        <label for="nomeCompleto">Nome completo</label>
+                        <input type="text" id="nomeCompleto" class="campo_requerido" name="nome_completo"
+                            placeholder="Digite aqui" required aria-describedby="nomeCompletoError">
+                        <span class="error-message" id="nomeCompletoError"></span>
+                    </div>
+                    <div class="data_nascimento formulario_informacoes_campo">
+                        <label for="dataNascimento">Data de Nascimento</label>
+                        <input type="date" id="dataNascimento" class="campo_requerido" name="data_nascimento" required
+                            aria-describedby="dataNascimentoError">
+                        <span class="error-message" id="dataNascimentoError"></span>
+                    </div>
+                    <div class="cpf formulario_informacoes_campo">
+                        <label for="cpf">CPF</label>
+                        <input type="text" id="cpf" name="cpf" class="campo_requerido" placeholder="123.456.789-00"
+                            required pattern="[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}" title="Formato: 123.456.789-00"
+                            aria-describedby="cpfError">
+                        <span class="error-message" id="cpfError"></span>
+                    </div>
+                    <div class="sexo formulario_informacoes_campo">
+                        <label for="sexo">Sexo</label>
+                        <select name="sexo" id="sexo" class="campo_requerido" required aria-describedby="sexoError">
+                            <option value="">Selecione</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Masculino">Masculino</option>
+                        </select>
+                        <span class="error-message" id="sexoError"></span>
+                    </div>
+                    <div class="email formulario_informacoes_campo">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" class="campo_requerido" name="email"
+                            placeholder="email@servidor.com" required aria-describedby="emailError">
+                        <span class="error-message" id="emailError"></span>
+                    </div>
+                    <div class="telefone formulario_informacoes_campo">
+                        <label for="telefone">Telefone</label>
+                        <input type="text" id="telefone" class="campo_requerido" name="telefone"
+                            placeholder="(98)9 9999-9999" required aria-describedby="telefoneError">
+                        <span class="error-message" id="telefoneError"></span>
+                    </div>
+                    <div class="documento_identidade formulario_informacoes_campo">
+                        <label for="documentoIdentidade">Documento de identidade</label>
+                        <div class="enviar_documento">
+                            <label for="documentoIdentidade">
+                                <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
+                                <input type="file" id="documentoIdentidade" class="campo_requerido"
+                                    name="documento_identidade" accept="image/*, application/pdf" required
+                                    aria-describedby="documentoIdentidadeError">
+                                <span class="file-label">Clique aqui para selecionar arquivos</span>
+                            </label>
+                        </div>
+                        <div class="file-info">
+                            <span class="file-name" id="documentoIdentidadeName"></span>
+                            <button class="delete-file-btn" data-for="documentoIdentidade" style="display: none;"
+                                aria-label="Remover arquivo">
+                                <img src="./assets/images/trash-icon.png" alt="Excluir arquivo">
+                            </button>
+                        </div>
+                        <span class="error-message" id="documentoIdentidadeError"></span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Endereço residencial -->
+            <div class="conteudo_movel_endereco">
+                <h4>Endereço residencial</h4>
+                <form id="formularioEndereco" class="formulario_endereco">
+                    <div class="form_box formulario_endereco_cep">
+                        <label for="cep">CEP</label>
+                        <input type="text" id="cep" class="campo_requerido" name="cep" placeholder="01234-567" required
+                            pattern="[0-9]{5}-[0-9]{3}" title="Formato: 12345-678" aria-describedby="cepError">
+                        <span class="error-message" id="cepError"></span>
+                    </div>
+                    <div class="form_box form_box_double">
+                        <div class="form_box_sub_left formulario_endereco_rua">
+                            <label for="rua">Rua</label>
+                            <input type="text" id="rua" class="campo_requerido" name="rua" placeholder="Rua 1" required
+                                aria-describedby="ruaError">
+                            <span class="error-message" id="ruaError"></span>
+                        </div>
+                        <div class="form_box_sub_rigth formulario_endereco_numero">
+                            <label for="numero">Número</label>
+                            <input type="text" id="numero" class="campo_requerido" name="numero" placeholder="10"
+                                required aria-describedby="numeroError">
+                            <span class="error-message" id="numeroError"></span>
+                        </div>
+                    </div>
+                    <div class="form_box form_box_double">
+                        <div class="form_box_sub_left formulario_endereco_cidade">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" id="cidade" class="campo_requerido" name="cidade" placeholder="São Luís"
+                                required aria-describedby="cidadeError">
+                            <span class="error-message" id="cidadeError"></span>
+                        </div>
+                        <div class="form_box_sub_rigth formulario_endereco_estado">
+                            <label for="estado">Estado</label>
+                            <input type="text" id="estado" class="campo_requerido" name="estado" placeholder="MA"
+                                required aria-describedby="estadoError">
+                            <span class="error-message" id="estadoError"></span>
+                        </div>
+                    </div>
+                    <div class="form_box formulario_endereco_comprovante">
+                        <label for="comprovante">Comprovante de Residência</label>
+                        <div class="enviar_documento">
+                            <label for="comprovante">
+                                <img src="./assets/images/cloud-upload.png" alt="Ícone de upload">
+                                <input type="file" id="comprovante" class="campo_requerido" name="comprovante"
+                                    accept="image/*, application/pdf" required aria-describedby="comprovanteError">
+                                <span class="file-label">Clique aqui para selecionar o arquivo</span>
+                            </label>
+                        </div>
+                        <div class="file-info">
+                            <span class="file-name" id="comprovanteName"></span>
+                            <button class="delete-file-btn" data-for="comprovante" style="display: none;"
+                                aria-label="Remover arquivo">
+                                <img src="./assets/images/trash-icon.png" alt="Excluir arquivo">
+                            </button>
+                        </div>
+                        <span class="error-message" id="comprovanteError"></span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Trilhas de aprendizagem -->
+            <div class="conteudo_movel_trilhas">
+                <h4>Trilhas de aprendizagem</h4>
+                <form id="formularioTrilha">
+                    <fieldset>
+                        <legend>Selecione apenas uma trilha</legend>
+                        <div class="trilhas_container">
+                            <div class="trilha">
+                                <label for="frontEnd" class="rotulo">
+                                    <input type="radio" id="frontEnd" name="trilha" value="front-end" required
+                                        aria-describedby="trilhaError">
+                                    <img src="./assets/images/front-end.png" alt="Ícone de Front-end">
+                                    Programação Front-end
+                                </label>
+                            </div>
+                            <div class="trilha">
+                                <label for="backEnd" class="rotulo">
+                                    <input type="radio" id="backEnd" name="trilha" value="back-end" required
+                                        aria-describedby="trilhaError">
+                                    <img src="./assets/images/back-end.png" alt="Ícone de Back-end">
+                                    Programação Back-end
+                                </label>
+                            </div>
+                            <div class="trilha">
+                                <label for="games" class="rotulo">
+                                    <input type="radio" id="games" name="trilha" value="games" required
+                                        aria-describedby="trilhaError">
+                                    <img src="./assets/images/jogos.png" alt="Ícone de Jogos">
+                                    Programação de Jogos
+                                </label>
+                            </div>
+                            <div class="trilha">
+                                <label for="ux" class="rotulo">
+                                    <input type="radio" id="ux" name="trilha" value="ux" required
+                                        aria-describedby="trilhaError">
+                                    <img src="./assets/images/ux.png" alt="Ícone de UX">
+                                    Design e Experiência
+                                </label>
+                            </div>
+                            <div class="trilha">
+                                <label for="data" class="rotulo">
+                                    <input type="radio" id="data" name="trilha" value="data" required
+                                        aria-describedby="trilhaError">
+                                    <img src="./assets/images/Frame.png" alt="Ícone de Ciência de Dados">
+                                    Ciência de Dados
+                                </label>
+                            </div>
+                        </div>
+                        <span class="error-message" id="trilhaError"></span>
+                    </fieldset>
+                </form>
+            </div>
+
+            <!-- Credenciais do usuário -->
+            <div class="conteudo_movel_credenciais">
+                <h4>Crie seu acesso</h4>
+                <form id="formularioCredenciais">
+                    <div class="form_box formulario_credenciais_id">
+                        <label for="userId">ID do Usuário</label>
+                        <input type="text" id="userId" name="userId" placeholder="Digite um ID único"
+                            aria-describedby="userIdError">
+                        <span class="error-message" id="userIdError"></span>
+                    </div>
+
+                    <div class="form_box formulario_credenciais_senha">
+                        <label for="password">Senha</label>
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha"
+                            aria-describedby="passwordError">
+                        <span class="error-message" id="passwordError"></span>
+                    </div>
+
+                    <div class="form_box formulario_credenciais_confirmacao">
+                        <label for="confirmPassword">Confirme sua senha</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword"
+                            placeholder="Digite novamente sua senha" aria-describedby="confirmPasswordError">
+                        <span class="error-message" id="confirmPasswordError"></span>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Termos e condições -->
+            <div class="conteudo_movel_checkbox">
+                <input type="checkbox" id="termos" required aria-describedby="termosError">
+                <label for="termos">Declaro que li e concordo com os <a href="/" target="_blank"><span>Termos e
+                            Condições</span></a> e com a
+                    <a href="/" target="_blank"><span>Política de Privacidade</span></a>.</label>
+                <span class="error-message" id="termosError"></span>
+            </div>
+
+            <!-- Botões de ação -->
+            <div class="conteudo_movel_acao">
+                <form>
+                    <button type="button" id="cancelBtn">Cancelar</button>
+                    <button type="button" id="submitBtn">Fazer Inscrição</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Seção fixa -->
+        <section class="conteudo_fixo">
+            <div class="imagem">
+                <img src="./assets/images/Ilustration0.png" alt="Ilustração">
+            </div>
+            <div>
+                <img src="./assets/images/logo-trilhas-inova.png" alt="Logo Trilhas Inova">
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de confirmação -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" aria-label="Fechar modal">&times;</span>
+            <h2>Inscrição Concluída!</h2>
+            <p>Sua inscrição no Programa Trilhas foi realizada com sucesso.</p>
+            <p>Você receberá um e-mail com os detalhes da sua inscrição.</p>
+            <button id="modalOkBtn">OK</button>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

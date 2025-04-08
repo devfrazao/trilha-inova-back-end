@@ -1,0 +1,40 @@
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: calc(100vh - 50px);
+}
+
+.dashboard-content {
+    flex: 1;
+    padding: 30px;
+}
+
+.welcome-banner {
+    background-color: var(--brand-darker);
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.welcome-banner h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.welcome-banner p {
+    margin: 10px 0 0;
+    font-size: 16px;
+}
+
+.welcome-banner a {
+    margin-top: 50%;
+    font-size: 16px;
+    text-decoration: none;
+    color: var(--brand-mid)
+}
+
