@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Campos de credenciais
-        document.getElementById('userId').addEventListener('blur', validateUserId);
+        document.getElementById('userName').addEventListener('blur', validateUserName);
         document.getElementById('password').addEventListener('blur', validatePassword);
         document.getElementById('confirmPassword').addEventListener('blur', validateConfirmPassword);
 
@@ -150,9 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    function validateUserId() {
-        const field = document.getElementById('userId');
-        const errorElement = document.getElementById('userIdError');
+    function validateUserName() {
+        const field = document.getElementById('userName');
+        const errorElement = document.getElementById('userNameError');
 
         if (!field.value.trim()) {
             field.classList.add('invalid');
@@ -387,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showRegistrationForm() {
         loginScreen.style.display = 'none';
         mainForm.style.display = 'flex';
-        localStorage.removeItem('formData');
+        sessionStorage.removeItem('formData');
     }
 
     function confirmCancel() {
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Validar campos normais
         const fieldsToValidate = [
             'nomeCompleto', 'dataNascimento', 'cpf', 'sexo', 'email', 'telefone',
-            'cep', 'rua', 'numero', 'cidade', 'estado', 'userId', 'password', 'confirmPassword'
+            'cep', 'rua', 'numero', 'cidade', 'estado', 'userName', 'password', 'confirmPassword'
         ];
 
         fieldsToValidate.forEach(id => {
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
             else if (id === 'cpf') isValid = validateCPFField() && isValid;
             else if (id === 'password') isValid = validatePassword() && isValid;
             else if (id === 'confirmPassword') isValid = validateConfirmPassword() && isValid;
-            else if (id === 'userId') isValid = validateUserId() && isValid;
+            else if (id === 'userName') isValid = validateUserName() && isValid;
             else isValid = validateField(field) && isValid;
         });
 
@@ -462,11 +462,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleLogin(e) {
         e.preventDefault();
-        const userId = document.getElementById('loginId').value.trim();
+        const userName = document.getElementById('loginId').value.trim();
         const password = document.getElementById('loginPassword').value.trim();
-        const users = JSON.parse(localStorage.getItem('users')) || {};
+        const users = JSON.parse(sessionStorage.getItem('users')) || {};
 
-        if (!userId) {
+        if (!userName) {
             showError(document.getElementById('loginId'), 'ID do usuário é obrigatório');
             return;
         }
@@ -476,8 +476,8 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        if (users[userId] && users[userId] === password) {
-            localStorage.setItem('currentUser', userId);
+        if (users[userName] && users[userName] === password) {
+            sessionStorage.setItem('currentUser', userName);
             window.location.href = 'dashboard.html';
         } else {
             alert('ID do usuário ou senha incorretos');
@@ -487,6 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function saveFormData() {
         const formData = {
             informacoes: {
+                userId: document.getElementById('cpf').value,
                 nomeCompleto: document.getElementById('nomeCompleto').value,
                 dataNascimento: document.getElementById('dataNascimento').value,
                 cpf: document.getElementById('cpf').value,
@@ -509,24 +510,24 @@ document.addEventListener('DOMContentLoaded', function () {
             },
             trilha: document.querySelector('input[name="trilha"]:checked')?.value,
             credenciais: {
-                userId: document.getElementById('userId').value,
+                userName: document.getElementById('userName').value,
                 password: document.getElementById('password').value
             },
             termos: termosCheckbox.checked
         };
 
-        localStorage.setItem('formData', JSON.stringify(formData));
+        sessionStorage.setItem('formData', JSON.stringify(formData));
 
         // Salvar credenciais para login
-        if (formData.credenciais.userId && formData.credenciais.password) {
-            const users = JSON.parse(localStorage.getItem('users')) || {};
-            users[formData.credenciais.userId] = formData.credenciais.password;
-            localStorage.setItem('users', JSON.stringify(users));
+        if (formData.credenciais.userName && formData.credenciais.password) {
+            const users = JSON.parse(sessionStorage.getItem('users')) || {};
+            users[formData.credenciais.userName] = formData.credenciais.password;
+            sessionStorage.setItem('users', JSON.stringify(users));
         }
     }
 
     function loadFormData() {
-        const savedData = localStorage.getItem('formData');
+        const savedData = sessionStorage.getItem('formData');
         if (!savedData) return;
 
         const formData = JSON.parse(savedData);
@@ -565,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (formData.credenciais) {
-            document.getElementById('userId').value = formData.credenciais.userId || '';
+            document.getElementById('userName').value = formData.credenciais.userName || '';
             document.getElementById('password').value = formData.credenciais.password || '';
             document.getElementById('confirmPassword').value = formData.credenciais.password || '';
         }
@@ -608,8 +609,8 @@ document.addEventListener('DOMContentLoaded', function () {
             container.classList.remove('invalid', 'has-file');
         });
     
-        // Limpar dados temporários do localStorage
-        localStorage.removeItem('formData');
+        // Limpar dados temporários do sessionStorage
+        sessionStorage.removeItem('formData');
     
         // Resetar o formulário (opcional - pode ser usado como alternativa)
         document.getElementById('formularioInformacoes').reset();
