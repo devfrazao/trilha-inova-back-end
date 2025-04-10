@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('formularioCredenciais')
     ];
 
+    // Elementos de controle
     const termosCheckbox = document.getElementById('termos');
     const submitBtn = document.getElementById('submitBtn');
     const cancelBtn = document.getElementById('cancelBtn');
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setupRealTimeValidation();
     setupFileInputs();
     setupMasks();
-    loadFormData();
 
     // Event Listeners
     registerBtn.addEventListener('click', showRegistrationForm);
@@ -526,54 +526,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function loadFormData() {
-        const savedData = sessionStorage.getItem('formData');
-        if (!savedData) return;
-
-        const formData = JSON.parse(savedData);
-
-        // Preencher campos do formulário
-        Object.keys(formData.informacoes).forEach(key => {
-            if (key !== 'documentoIdentidade') {
-                const field = document.getElementById(key);
-                if (field) field.value = formData.informacoes[key] || '';
-            }
-        });
-
-        Object.keys(formData.endereco).forEach(key => {
-            if (key !== 'comprovante') {
-                const field = document.getElementById(key);
-                if (field) field.value = formData.endereco[key] || '';
-            }
-        });
-
-        // Preencher arquivos (apresentar nome)
-        if (formData.informacoes.documentoIdentidade?.name) {
-            document.getElementById('documentoIdentidadeName').textContent =
-                formData.informacoes.documentoIdentidade.name;
-            document.querySelector('[data-for="documentoIdentidade"]').style.display = 'inline-flex';
-        }
-
-        if (formData.endereco.comprovante?.name) {
-            document.getElementById('comprovanteName').textContent =
-                formData.endereco.comprovante.name;
-            document.querySelector('[data-for="comprovante"]').style.display = 'inline-flex';
-        }
-
-        // Preencher trilha e termos
-        if (formData.trilha) {
-            document.querySelector(`input[name="trilha"][value="${formData.trilha}"]`).checked = true;
-        }
-
-        if (formData.credenciais) {
-            document.getElementById('userName').value = formData.credenciais.userName || '';
-            document.getElementById('password').value = formData.credenciais.password || '';
-            document.getElementById('confirmPassword').value = formData.credenciais.password || '';
-        }
-
-        termosCheckbox.checked = formData.termos || false;
-    }
-
     function showConfirmationModal() {
         confirmationModal.style.display = 'block';
     }
@@ -583,6 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
         clearAndRedirect();
     }
 
+    // #Função que limpa os campos do formulário
     function clearAndRedirect() {
         // Limpar todos os campos de input, select e textarea
         document.querySelectorAll('input:not([type="file"]), select, textarea').forEach(element => {
