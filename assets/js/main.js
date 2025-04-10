@@ -1,57 +1,96 @@
+/**
+ * Script principal do formulário de inscrição
+ * 
+ * Este código controla todo o fluxo do sistema de inscrição, incluindo:
+ * - Gerenciamento das telas (login e formulário)
+ * - Validação de campos em tempo real
+ * - Máscaras para dados específicos (CPF, telefone, CEP)
+ * - Upload e gerenciamento de arquivos
+ * - Armazenamento temporário de dados
+ * - Autenticação de usuários
+ */
+
+// Aguarda o carregamento completo do DOM antes de executar o código
 document.addEventListener('DOMContentLoaded', function () {
+    // =============================================
+    // SELEÇÃO DE ELEMENTOS DA INTERFACE
+    // =============================================
+
     // Elementos da tela de login
     const loginScreen = document.getElementById('loginScreen');
     const loginForm = document.getElementById('loginForm');
     const registerBtn = document.getElementById('registerBtn');
     const mainForm = document.getElementById('mainForm');
 
-    // Elementos do formulário principal
+    // Elementos do formulário principal (agrupados por seção)
     const forms = [
-        document.getElementById('formularioInformacoes'),
-        document.getElementById('formularioEndereco'),
-        document.getElementById('formularioTrilha'),
-        document.getElementById('formularioCredenciais')
+        document.getElementById('formularioInformacoes'),  // Informações pessoais
+        document.getElementById('formularioEndereco'),     // Endereço
+        document.getElementById('formularioTrilha'),      // Seleção de trilha
+        document.getElementById('formularioCredenciais')  // Criação de credenciais
     ];
 
-    // Elementos de controle
-    const termosCheckbox = document.getElementById('termos');
-    const submitBtn = document.getElementById('submitBtn');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
+    // Elementos de controle gerais
+    const termosCheckbox = document.getElementById('termos');  // Checkbox de termos
+    const submitBtn = document.getElementById('submitBtn');    // Botão de envio
+    const cancelBtn = document.getElementById('cancelBtn');     // Botão de cancelar
+    const logoutBtn = document.getElementById('logoutBtn');     // Botão de sair
 
-    // Modal de confirmação
+    // Elementos do modal de confirmação
     const confirmationModal = document.getElementById('confirmationModal');
     const modalOkBtn = document.getElementById('modalOkBtn');
     const closeModal = document.querySelector('.close');
 
-    // Mostrar tela de login inicialmente
+    // Configuração inicial: mostra tela de login e esconde formulário
     loginScreen.style.display = 'flex';
     mainForm.style.display = 'none';
 
-    // Configurar validação em tempo real
+    // =============================================
+    // CONFIGURAÇÕES INICIAIS
+    // =============================================
+
+    // Configura validações em tempo real para todos os campos
     setupRealTimeValidation();
+
+    // Configura os inputs de arquivo (documentos)
     setupFileInputs();
+
+    // Aplica máscaras aos campos de CPF, telefone e CEP
     setupMasks();
 
-    // Event Listeners
+    // =============================================
+    // CONFIGURAÇÃO DE EVENT LISTENERS
+    // =============================================
+
+    // Eventos da tela de login/cadastro
     registerBtn.addEventListener('click', showRegistrationForm);
+    loginForm.addEventListener('submit', handleLogin);
+
+    // Eventos do formulário principal
+    submitBtn.addEventListener('click', submitForm);
     cancelBtn.addEventListener('click', confirmCancel);
     logoutBtn.addEventListener('click', confirmLogout);
-    submitBtn.addEventListener('click', submitForm);
-    loginForm.addEventListener('submit', handleLogin);
+
+    // Eventos do modal de confirmação
     [closeModal, modalOkBtn].forEach(el => el.addEventListener('click', hideModal));
 
-    // Funções de configuração inicial
+    // =============================================
+    // FUNÇÕES DE CONFIGURAÇÃO
+    // =============================================
+
+    /**
+     * Configura a validação em tempo real para todos os campos do formulário
+     */
     function setupRealTimeValidation() {
-        // Campos de informações pessoais
+        // Validação para campos de informações pessoais
         const personalFields = ['nomeCompleto', 'dataNascimento', 'cpf', 'sexo', 'email', 'telefone'];
         personalFields.forEach(id => {
             const field = document.getElementById(id);
-            field.addEventListener('blur', () => validateField(field));
-            field.addEventListener('input', () => clearError(field));
+            field.addEventListener('blur', () => validateField(field));  // Valida ao sair do campo
+            field.addEventListener('input', () => clearError(field));    // Limpa erro ao digitar
         });
 
-        // Campos de endereço
+        // Validação para campos de endereço
         const addressFields = ['cep', 'rua', 'numero', 'cidade', 'estado'];
         addressFields.forEach(id => {
             const field = document.getElementById(id);
@@ -59,76 +98,85 @@ document.addEventListener('DOMContentLoaded', function () {
             field.addEventListener('input', () => clearError(field));
         });
 
-        // Campos de credenciais
+        // Validação especial para campos de credenciais
         document.getElementById('userName').addEventListener('blur', validateUserName);
         document.getElementById('password').addEventListener('blur', validatePassword);
         document.getElementById('confirmPassword').addEventListener('blur', validateConfirmPassword);
 
-        // Campos especiais
-        document.getElementById('email').addEventListener('blur', validateEmail);
-        document.getElementById('cpf').addEventListener('blur', validateCPFField);
+        // Validações especiais para campos com regras específicas
+        document.getElementById('email').addEventListener('blur', validateEmail);  // Valida formato de e-mail
+        document.getElementById('cpf').addEventListener('blur', validateCPFField); // Valida CPF
 
-        // Trilhas e termos
+        // Validação para seleção de trilha (radio buttons)
         document.querySelectorAll('input[name="trilha"]').forEach(radio => {
             radio.addEventListener('change', validateTrilha);
         });
+
+        // Validação para aceite dos termos
         termosCheckbox.addEventListener('change', validateTerms);
     }
 
+    /**
+     * Configura os inputs de arquivo para upload de documentos
+     */
     function setupFileInputs() {
+        // Configura o input para documento de identidade
         setupFileInput('documentoIdentidade', 'documentoIdentidadeName');
+
+        // Configura o input para comprovante de residência
         setupFileInput('comprovante', 'comprovanteName');
     }
 
+    /**
+     * Configura máscaras para campos formatados (CPF, telefone, CEP)
+     */
     function setupMasks() {
-        // Máscara de CPF
+        // Máscara para CPF (XXX.XXX.XXX-XX)
         document.getElementById('cpf').addEventListener('input', function (e) {
-            let value = this.value.replace(/\D/g, '');
+            let value = this.value.replace(/\D/g, '');  // Remove tudo que não é dígito
 
-            if (value.length > 3) {
-                value = value.substring(0, 3) + '.' + value.substring(3);
-            }
-            if (value.length > 7) {
-                value = value.substring(0, 7) + '.' + value.substring(7);
-            }
-            if (value.length > 11) {
-                value = value.substring(0, 11) + '-' + value.substring(11, 13);
-            }
+            // Aplica a formatação
+            if (value.length > 3) value = value.substring(0, 3) + '.' + value.substring(3);
+            if (value.length > 7) value = value.substring(0, 7) + '.' + value.substring(7);
+            if (value.length > 11) value = value.substring(0, 11) + '-' + value.substring(11, 13);
 
-            this.value = value.substring(0, 14);
+            this.value = value.substring(0, 14);  // Limita ao tamanho máximo
         });
 
-        // Máscara de telefone
+        // Máscara para telefone ((XX) X XXXX-XXXX)
         document.getElementById('telefone').addEventListener('input', function (e) {
             let value = this.value.replace(/\D/g, '');
 
-            if (value.length > 0) {
-                value = '(' + value.substring(0, 2) + ')' + value.substring(2);
-            }
-            if (value.length > 4) {
-                value = value.substring(0, 4) + ' ' + value.substring(4);
-            }
-            if (value.length > 10) {
-                value = value.substring(0, 10) + '-' + value.substring(10, 14);
-            }
+            // Aplica a formatação
+            if (value.length > 0) value = '(' + value.substring(0, 2) + ')' + value.substring(2);
+            if (value.length > 4) value = value.substring(0, 4) + ' ' + value.substring(4);
+            if (value.length > 10) value = value.substring(0, 10) + '-' + value.substring(10, 14);
 
             this.value = value.substring(0, 15);
         });
 
-        // Máscara de CEP
+        // Máscara para CEP (XXXXX-XXX)
         document.getElementById('cep').addEventListener('input', function (e) {
             let value = this.value.replace(/\D/g, '');
 
-            if (value.length > 5) {
-                value = value.substring(0, 5) + '-' + value.substring(5, 8);
-            }
+            // Aplica a formatação
+            if (value.length > 5) value = value.substring(0, 5) + '-' + value.substring(5, 8);
 
             this.value = value.substring(0, 9);
         });
     }
 
-    // Funções de validação em tempo real
+    // =============================================
+    //  FUNÇÕES DE VALIDAÇÃO
+    // =============================================
+
+    /**
+     * Valida um campo genérico do formulário
+     * @param {HTMLElement} field - Elemento do campo a ser validado
+     * @returns {boolean} Retorna true se o campo for válido
+     */
     function validateField(field) {
+        // Mensagens de erro para cada tipo de campo
         const errorMessages = {
             'nomeCompleto': 'Nome completo é obrigatório',
             'dataNascimento': 'Data de nascimento é obrigatória',
@@ -143,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'estado': 'Estado é obrigatório'
         };
 
+        // Verifica se o campo está vazio
         if (!field.value.trim()) {
             showError(field, errorMessages[field.id] || 'Campo obrigatório');
             return false;
@@ -150,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida o nome de usuário (ID do usuário)
+     * @returns {boolean} Retorna true se o nome de usuário for válido
+     */
     function validateUserName() {
         const field = document.getElementById('userName');
         const errorElement = document.getElementById('userNameError');
@@ -166,6 +219,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida a senha do usuário
+     * @returns {boolean} Retorna true se a senha for válida
+     */
     function validatePassword() {
         const field = document.getElementById('password');
         const errorElement = document.getElementById('passwordError');
@@ -177,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
 
+        // Verifica se a senha tem pelo menos 6 caracteres
         if (field.value.length < 6) {
             field.classList.add('invalid');
             errorElement.textContent = 'A senha deve ter pelo menos 6 caracteres';
@@ -189,6 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida a confirmação de senha
+     * @returns {boolean} Retorna true se a confirmação for válida
+     */
     function validateConfirmPassword() {
         const field = document.getElementById('confirmPassword');
         const password = document.getElementById('password').value;
@@ -201,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
 
+        // Verifica se as senhas coincidem
         if (field.value !== password) {
             field.classList.add('invalid');
             errorElement.textContent = 'As senhas não coincidem';
@@ -213,9 +276,13 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida o formato do e-mail
+     * @returns {boolean} Retorna true se o e-mail for válido
+     */
     function validateEmail() {
         const field = document.getElementById('email');
-        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expressão regular para validar e-mail
 
         if (!field.value.trim()) {
             showError(field, 'E-mail é obrigatório');
@@ -228,6 +295,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida o campo de CPF
+     * @returns {boolean} Retorna true se o CPF for válido
+     */
     function validateCPFField() {
         const field = document.getElementById('cpf');
         if (!field.value.trim()) {
@@ -241,12 +312,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Algoritmo de validação de CPF
+     * @param {string} cpf - CPF a ser validado
+     * @returns {boolean} Retorna true se o CPF for válido
+     */
     function validateCPF(cpf) {
-        cpf = cpf.replace(/[^\d]+/g, '');
+        cpf = cpf.replace(/[^\d]+/g, ''); // Remove caracteres não numéricos
 
+        // Verifica se tem 11 dígitos ou se é uma sequência repetida
         if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
 
-        // Validação dos dígitos verificadores
+        // Validação do primeiro dígito verificador
         let sum = 0;
         for (let i = 1; i <= 9; i++) {
             sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
@@ -255,6 +332,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (remainder === 10 || remainder === 11) remainder = 0;
         if (remainder !== parseInt(cpf.substring(9, 10))) return false;
 
+        // Validação do segundo dígito verificador
         sum = 0;
         for (let i = 1; i <= 10; i++) {
             sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
@@ -266,6 +344,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida se uma trilha foi selecionada
+     * @returns {boolean} Retorna true se uma trilha foi selecionada
+     */
     function validateTrilha() {
         const trilhaSelected = document.querySelector('input[name="trilha"]:checked');
         if (!trilhaSelected) {
@@ -277,6 +359,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida se os termos foram aceitos
+     * @returns {boolean} Retorna true se os termos foram aceitos
+     */
     function validateTerms() {
         if (!termosCheckbox.checked) {
             document.getElementById('termosError').textContent = 'Você deve aceitar os termos e condições';
@@ -287,6 +373,10 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
+    /**
+     * Valida os campos de arquivo (documentos)
+     * @returns {boolean} Retorna true se todos os arquivos forem válidos
+     */
     function validateFileFields() {
         let isValid = true;
         const fields = [
@@ -299,7 +389,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!field.files || field.files.length === 0) {
                 showError(field, message);
                 isValid = false;
-            } else if (field.files[0].size > 5 * 1024 * 1024) {
+            } else if (field.files[0].size > 5 * 1024 * 1024) { // 5MB
                 showError(field, 'O arquivo deve ser menor que 5MB');
                 isValid = false;
             } else {
@@ -310,26 +400,33 @@ document.addEventListener('DOMContentLoaded', function () {
         return isValid;
     }
 
-    // Funções auxiliares
-    function showError(field, message) {
-        // Encontrar o container pai apropriado
-        const container = field.closest('.formulario_informacoes_campo, .form_box');
+    // =============================================
+    // FUNÇÕES AUXILIARES
+    // =============================================
 
-        // Encontrar o elemento de mensagem de erro
+    /**
+     * Exibe uma mensagem de erro para um campo
+     * @param {HTMLElement} field - Campo que contém o erro
+     * @param {string} message - Mensagem de erro a ser exibida
+     */
+    function showError(field, message) {
+        const container = field.closest('.formulario_informacoes_campo, .form_box');
         const errorElement = container.querySelector('.error-message');
 
-        // Adicionar classe de erro ao container do campo de arquivo
         if (field.type === 'file') {
             field.closest('.enviar_documento').classList.add('invalid');
         } else {
             field.classList.add('invalid');
         }
 
-        // Exibir mensagem de erro
         errorElement.textContent = message;
         errorElement.style.display = 'block';
     }
 
+    /**
+     * Limpa a mensagem de erro de um campo
+     * @param {HTMLElement} field - Campo a ter o erro limpo
+     */
     function clearError(field) {
         const container = field.closest('.formulario_informacoes_campo, .form_box');
         const errorElement = container.querySelector('.error-message');
@@ -345,6 +442,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Configura um input de arquivo com pré-visualização
+     * @param {string} inputId - ID do input de arquivo
+     * @param {string} displayId - ID do elemento que exibe o nome do arquivo
+     */
     function setupFileInput(inputId, displayId) {
         const input = document.getElementById(inputId);
         const display = document.getElementById(displayId);
@@ -376,37 +478,50 @@ document.addEventListener('DOMContentLoaded', function () {
             deleteBtn.style.display = 'none';
             input.closest('.enviar_documento').classList.remove('has-file');
 
-            // Mostrar erro ao remover arquivo
             showError(input, isComprovante ?
                 'Comprovante de residência é obrigatório' :
                 'Documento de identidade é obrigatório');
         });
     }
 
-    // Funções de fluxo da aplicação
+    // =============================================
+    // FLUXO DA APLICAÇÃO
+    // =============================================
+
+    /**
+     * Mostra o formulário de registro e esconde a tela de login
+     */
     function showRegistrationForm() {
         loginScreen.style.display = 'none';
         mainForm.style.display = 'flex';
         sessionStorage.removeItem('formData');
     }
 
+    /**
+     * Confirma o cancelamento do formulário
+     */
     function confirmCancel() {
         if (confirm('Deseja realmente cancelar? Qualquer dado não salvo será perdido.')) {
             clearAndRedirect();
         }
     }
 
+    /**
+     * Confirma o logout do usuário
+     */
     function confirmLogout() {
         if (confirm('Deseja realmente sair? Qualquer dado não salvo será perdido.')) {
             clearAndRedirect();
         }
     }
 
+    /**
+     * Submete o formulário após validar todos os campos
+     */
     function submitForm() {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="loading">Processando...</span>';
 
-        // Validar todos os campos
         const formsValid = validateAllForms();
         const filesValid = validateFileFields();
         const termsValid = validateTerms();
@@ -425,10 +540,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Valida todos os formulários de uma vez
+     * @returns {boolean} Retorna true se todos os formulários forem válidos
+     */
     function validateAllForms() {
         let isValid = true;
 
-        // Validar campos normais
         const fieldsToValidate = [
             'nomeCompleto', 'dataNascimento', 'cpf', 'sexo', 'email', 'telefone',
             'cep', 'rua', 'numero', 'cidade', 'estado', 'userName', 'password', 'confirmPassword'
@@ -444,7 +562,6 @@ document.addEventListener('DOMContentLoaded', function () {
             else isValid = validateField(field) && isValid;
         });
 
-        // Validar componentes especiais
         isValid = validateTrilha() && isValid;
         isValid = validateTerms() && isValid;
         isValid = validateFileFields() && isValid;
@@ -452,6 +569,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return isValid;
     }
 
+    /**
+     * Rola a página até o primeiro campo com erro
+     */
     function scrollToFirstError() {
         const firstError = document.querySelector('.invalid');
         if (firstError) {
@@ -460,6 +580,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Manipula o login do usuário
+     * @param {Event} e - Evento de submit do formulário
+     */
     function handleLogin(e) {
         e.preventDefault();
         const userName = document.getElementById('loginId').value.trim();
@@ -484,6 +608,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Salva os dados do formulário no sessionStorage
+     */
     function saveFormData() {
         const formData = {
             informacoes: {
@@ -518,7 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         sessionStorage.setItem('formData', JSON.stringify(formData));
 
-        // Salvar credenciais para login
+        // Salva as credenciais para login futuro
         if (formData.credenciais.userName && formData.credenciais.password) {
             const users = JSON.parse(sessionStorage.getItem('users')) || {};
             users[formData.credenciais.userName] = formData.credenciais.password;
@@ -526,18 +653,26 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Mostra o modal de confirmação
+     */
     function showConfirmationModal() {
         confirmationModal.style.display = 'block';
     }
 
+    /**
+     * Esconde o modal de confirmação
+     */
     function hideModal() {
         confirmationModal.style.display = 'none';
         clearAndRedirect();
     }
 
-    // #Função que limpa os campos do formulário
+    /**
+     * Limpa todos os campos e redireciona para a tela de login
+     */
     function clearAndRedirect() {
-        // Limpar todos os campos de input, select e textarea
+        // Limpa campos de input, select e textarea
         document.querySelectorAll('input:not([type="file"]), select, textarea').forEach(element => {
             if (element.type === 'checkbox' || element.type === 'radio') {
                 element.checked = false;
@@ -546,35 +681,39 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             element.classList.remove('invalid');
         });
-    
-        // Limpar campos de arquivo especificamente
+
+        // Limpa campos de arquivo
         clearFileInput('documentoIdentidade');
         clearFileInput('comprovante');
-    
-        // Limpar todos os campos de mensagem de erro
+
+        // Limpa mensagens de erro
         document.querySelectorAll('.error-message').forEach(errorElement => {
             errorElement.style.display = 'none';
             errorElement.textContent = '';
         });
-    
-        // Remover classes de erro dos containers de arquivo
+
+        // Remove classes de erro
         document.querySelectorAll('.enviar_documento').forEach(container => {
             container.classList.remove('invalid', 'has-file');
         });
-    
-        // Limpar dados temporários do sessionStorage
+
+        // Remove dados temporários
         sessionStorage.removeItem('formData');
-    
-        // Resetar o formulário (opcional - pode ser usado como alternativa)
+
+        // Reseta os formulários
         document.getElementById('formularioInformacoes').reset();
         document.getElementById('formularioEndereco').reset();
         document.getElementById('formularioCredenciais').reset();
-    
-        // Voltar para a tela de login
+
+        // Volta para a tela de login
         mainForm.style.display = 'none';
         loginScreen.style.display = 'flex';
     }
 
+    /**
+     * Limpa um input de arquivo específico
+     * @param {string} inputId - ID do input de arquivo a ser limpo
+     */
     function clearFileInput(inputId) {
         const input = document.getElementById(inputId);
         const display = document.getElementById(`${inputId}Name`);
