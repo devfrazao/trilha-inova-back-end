@@ -46,3 +46,8 @@ git clone https://github.com/seu-usuario/trilhas-inova-back-end.git
 3. Executar o projeto
 - Abra o arquivo `index.html` no seu navegador
 - Ou utilize um servidor local
+
+## 🤝 Team
+
+- Thiago Frazão
+- Rayanderson Marques
